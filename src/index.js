@@ -19,11 +19,11 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+app.use('/event', eventRouter);
+
 app.get('/', (req, res) => {
   res.send('Hello world');
 });
-
-app.use('/event', eventRouter);
 
 app.listen(8000, () => {
   console.log('Server running on port 8000');

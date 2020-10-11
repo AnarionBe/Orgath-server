@@ -7,9 +7,18 @@ const router = new express.Router();
 router.get('/', async (req, res) => {
   try {
     const listEvents = await Event.find({});
-    res.status(200).json(listEvents);
+    return res.status(200).json(listEvents);
   } catch(err) {
-    res.status(500).json(err);
+    return res.status(500).json(err);
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    return res.status(200).json(event);
+  } catch(err) {
+    return res.status(500).json(err);
   }
 });
 
@@ -17,18 +26,27 @@ router.post('/', async (req, res) => {
   try {
     const newEvent = (new Event(req.body));
     newEvent.save();
-    res.status(200).json(newEvent);
+    return res.status(200).json(newEvent);
   } catch(err) {
-    res.status(500).json(err);
+    return res.status(500).json(err);
   }
 });
 
 router.put('/:id', async (req, res) => {
   try {
     const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, {new: true});
-    res.status(200).json(updatedEvent);
+    return res.status(200).json(updatedEvent);
   } catch(err) {
-    res.status(500).json(err);
+    return res.status(500).json(err);
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+    return res.status(200).json(deletedEvent);
+  } catch(err) {
+    return res.status(500).json(err);
   }
 });
 
