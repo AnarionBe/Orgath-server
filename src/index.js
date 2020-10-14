@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
+import cors from 'cors'
 
 import eventRouter from './routes/event'
 import todoRouter from './routes/todo'
@@ -17,6 +18,7 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(_ => console.log('connected to MongoDb'))
   .catch(err => console.error(err));
 
+app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
