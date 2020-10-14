@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 
 import eventRouter from './routes/event'
+import todoRouter from './routes/todo'
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.use('/event', eventRouter);
+app.use('/todo', todoRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello world');

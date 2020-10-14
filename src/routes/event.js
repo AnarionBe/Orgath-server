@@ -1,10 +1,9 @@
 import express from 'express'
-
 import Event from '../models/event'
 
 const router = new express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (_, res) => {
   try {
     const listEvents = await Event.find({});
     return res.status(200).json(listEvents);
@@ -24,9 +23,9 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const newEvent = (new Event(req.body));
-    newEvent.save();
-    return res.status(200).json(newEvent);
+    const newEvent = new Event(req.body);
+    await newEvent.save();
+    return res.status(201).json(newEvent);
   } catch(err) {
     return res.status(500).json(err);
   }
