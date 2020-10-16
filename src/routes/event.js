@@ -1,11 +1,16 @@
 import express from 'express'
 import Event from '../models/event'
+import dayjs from 'dayjs'
 
 const router = new express.Router();
 
-router.get('/', async (_, res) => {
+router.get('/', async (req, res) => {
   try {
-    const listEvents = await Event.find({});
+    let listEvents = await Event.find({});
+    if(req.query.date) {
+      const date = dayjs(req.query.date);
+      listEvents = listEvents.filter(evt => dayjs(evt.date).date() === date.date())
+    }
     return res.status(200).json(listEvents);
   } catch(err) {
     return res.status(500).json(err);
