@@ -13,18 +13,18 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v2
+    - run: rm -rf ./front
+    - run: git clone https://github.com/AnarionBe/Orgath.git ./front
+    - run: cd ./front
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Get front repo
-      uses: actions/setup-node@v1
-      with:
-        repository: AnarionBe/Orgath
-        path: front
     - run: npm ci
     - run: npm run build --if-present
+    - run: cd ../
+    - run: mv ./front/build ./public
+    - run: rm -rf ./front
