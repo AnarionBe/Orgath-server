@@ -29,7 +29,7 @@ app.use('/event', eventRouter);
 app.use('/todo', todoRouter);
 
 app.get('/', (req, res) => {
-  res.sendFile('/public/index.html');
+  res.send('Hello world!');
 });
 
 app.listen(process.env.PORT || 8000, () => {
