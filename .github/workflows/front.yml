@@ -16,15 +16,8 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - run: rm -rf ./front
-    - run: git clone https://github.com/AnarionBe/Orgath.git ./front
-    - run: cd ./front
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: cd ../
-    - run: mv ./front/build ./public
-    - run: rm -rf ./front
+    uses: actions/setup-node@v1
+    with:
+      node-version: ${{ matrix.node-version }}
+    - run: rm -rf ./front &&  git clone https://github.com/AnarionBe/Orgath.git ./front && cd ./front && npm ci && npm run build --if-present && cd ../ && mv ./front/build ./public && rm -rf ./front
