@@ -29,7 +29,7 @@ app.use('/event', eventRouter);
 app.use('/todo', todoRouter);
 
 app.get('/', (req, res) => {
-  res.send('Hello world');
+  res.send('Hello Heroku');
 });
 
 app.listen(process.env.PORT || 8000, () => {
