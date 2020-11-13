@@ -10,6 +10,7 @@ import cors from 'cors'
 import eventRouter from './routes/event'
 import todoRouter from './routes/todo'
 import weatherRouter from './routes/weather'
+import userRouter from './routes/user'
 
 dotenv.config();
 
@@ -29,6 +30,8 @@ app.use(bodyParser.json());
 app.use('/event', eventRouter);
 app.use('/todo', todoRouter);
 app.use('/weather', weatherRouter);
+
+app.use('/', userRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello world!');
