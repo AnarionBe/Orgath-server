@@ -12,6 +12,30 @@ const removeHash = (user) => {
   return user;
 }
 
+router.post('/login', async (req, res) => {
+  try {
+    const user = await User.findOne({email: req.body.email});
+
+    if(!user || !req.body.password) {
+      return res.status(404).json({
+        errors: [{message: 'Invalid credentials'}]
+      });
+    }
+
+    const result = await bcrypt.compare(req.body.password, user.password_hash);
+
+    if(!result) {
+      return res.status(404).json({
+        errors: [{message: 'Invalid credentials'}]
+      });
+    }
+
+    return res.status(200).json(removeHash(user));
+  } catch(err) {
+    return res.status(500).json(err);
+  }
+});
+
 router.post('/register', async (req, res) => {
   let errors = [];
 
