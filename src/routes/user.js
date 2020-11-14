@@ -1,6 +1,9 @@
 import express from 'express'
-import User from '../models/user'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+
+import User from '../models/user'
+import InvalidToken from '../models/invalidToken'
 
 const router = new express.Router();
 
@@ -10,6 +13,17 @@ const removeHash = (user) => {
   user = user.toObject();
   delete user.password_hash;
   return user;
+}
+
+const generateToken = user => {
+  const payload = {
+    email: user.email,
+    id: user._id
+  };
+
+  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || 'superSecret', {
+    expiresIn: process.env.ACCESS_TOKEN_MAX_AGE
+  });
 }
 
 router.post('/login', async (req, res) => {
@@ -30,7 +44,11 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    return res.status(200).json(removeHash(user));
+    const accessToken = generateToken(user);
+
+    return res.status(200).cookie('access_token', accessToken, {
+      maxAge: process.env.ACCESS_TOKEN_MAX_AGE
+    }).send();
   } catch(err) {
     return res.status(500).json(err);
   }
@@ -80,6 +98,16 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({errors});
     }
 
+    return res.status(500).json(err);
+  }
+});
+
+router.get('/logout', async (req, res) => {
+  try {
+    const newInvalidToken = new InvalidToken({token: req.cookies.access_token});
+    await newInvalidToken.save();
+    return res.status(200).json({message: 'Logged out'});
+  } catch(err) {
     return res.status(500).json(err);
   }
 });
