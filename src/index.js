@@ -27,7 +27,15 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(_ => console.log('connected to MongoDb'))
   .catch(err => console.error(err));
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:8888',
+    'https://localhost:8888',
+    'https://anarionbe.github.io/Orgath/'
+  ],
+  credentials: true,
+  exposedHeaders: ["set-cookie"]
+}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -38,9 +46,14 @@ app.use('/weather', checkAuth, weatherRouter);
 
 app.use('/', userRouter);
 
+app.get('/ping', checkAuth, (req, res) => {
+  return res.status(200).json({message: 'pong'});
+});
+
 app.get('/', (req, res) => {
   res.send('Hello world!');
 });
+
 
 app.listen(process.env.PORT || 8000, () => {
   console.log('Server running...');

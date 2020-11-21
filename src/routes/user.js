@@ -22,7 +22,7 @@ const generateToken = user => {
   };
 
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || 'superSecret', {
-    expiresIn: process.env.ACCESS_TOKEN_MAX_AGE
+    expiresIn: process.env.ACCESS_TOKEN_MAX_AGE || 36000
   });
 }
 
@@ -47,7 +47,9 @@ router.post('/login', async (req, res) => {
     const accessToken = generateToken(user);
 
     return res.status(200).cookie('access_token', accessToken, {
-      maxAge: process.env.ACCESS_TOKEN_MAX_AGE
+      maxAge: process.env.ACCESS_TOKEN_MAX_AGE || 36000,
+      sameSite: 'none',
+      secure: true
     }).send();
   } catch(err) {
     return res.status(500).json(err);
@@ -72,7 +74,7 @@ router.post('/register', async (req, res) => {
     });
   }
 
-  if(errors.length > 0) return res.status(400).json({errors})
+  if(errors.length > 0) return res.status(400).json({errors});
 
   // Create new user
   try {
@@ -83,7 +85,14 @@ router.post('/register', async (req, res) => {
       pseudo: req.body.pseudo
     });
     await newUser.save();
-    return res.status(201).json(removeHash(newUser));
+    
+    const accessToken = generateToken(newUser);
+
+    return res.status(200).cookie('access_token', accessToken, {
+      maxAge: process.env.ACCESS_TOKEN_MAX_AGE || 36000,
+      sameSite: 'none',
+      secure: true
+    }).send();
   } catch(err) {
     if(err.name === 'MongoError') {
       errors = Object.keys(err.keyValue).map(key => {
