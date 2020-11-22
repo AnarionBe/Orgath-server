@@ -11,5 +11,10 @@ export default mongoose.model('Event', new mongoose.Schema({
   },
   description: {
     type: String
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   }
 }));
