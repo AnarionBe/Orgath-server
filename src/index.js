@@ -12,6 +12,7 @@ import eventRouter from './routes/event'
 import todoRouter from './routes/todo'
 import weatherRouter from './routes/weather'
 import userRouter from './routes/user'
+import quoteRouter from './routes/quote'
 
 import {checkAuth} from './middlewares/auth'
 
@@ -43,6 +44,7 @@ app.use(cookieParser());
 app.use('/event', checkAuth, eventRouter);
 app.use('/todo', checkAuth, todoRouter);
 app.use('/weather', checkAuth, weatherRouter);
+app.use('/quote', checkAuth, quoteRouter);
 
 app.use('/', userRouter);
 
