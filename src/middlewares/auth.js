@@ -7,7 +7,8 @@ export const checkAuth = async (req, res, next) => {
 
     if(invalidToken) return res.status(401).json({message: 'Invalid token'})
 
-    await jwt.verify(req.cookies.access_token, process.env.ACCESS_TOKEN_SECRET || 'superSecret');
+    const token = await jwt.verify(req.cookies.access_token, process.env.ACCESS_TOKEN_SECRET || 'superSecret');
+    req.token = token;
     next();
   } catch(err) {
     return res.status(401).json(err);
