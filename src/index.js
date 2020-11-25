@@ -32,7 +32,7 @@ app.use(cors({
   origin: [
     'http://localhost:8888',
     'https://localhost:8888',
-    'https://anarionbe.github.io/Orgath'
+    'https://anarionbe.github.io'
   ],
   credentials: true,
   exposedHeaders: ["set-cookie"]
